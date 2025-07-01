@@ -1,0 +1,1031 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Анонимная социальная сеть | Идеи и мысли</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+    <style>
+        :root {
+            --primary-color: #4285F4;
+            --secondary-color: #34A853;
+            --accent-color: #EA4335;
+            --text-color: #333;
+            --light-gray: #f5f5f5;
+            --medium-gray: #e0e0e0;
+            --dark-gray: #757575;
+            --box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            --card-radius: 12px;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            color: var(--text-color);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+        
+        /* Header Styles */
+        header {
+            background-color: white;
+            box-shadow: var(--box-shadow);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+        
+        .logo-icon {
+            background: #ea4335;
+            color: white;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+        
+        nav ul li {
+            margin-left: 25px;
+        }
+        
+        nav ul li a {
+            text-decoration: none;
+            color: var(--text-color);
+            font-weight: 500;
+            transition: color 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        nav ul li a:hover {
+            color: #ea4335;
+        }
+        
+        /* Main Content */
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 300px;
+            gap: 30px;
+            margin: 30px 0;
+        }
+        
+        /* Post Form */
+        .post-form {
+            background: white;
+            border-radius: var(--card-radius);
+            box-shadow: var(--box-shadow);
+            padding: 25px;
+            margin-bottom: 30px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .post-form::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 5px;
+            height: 100%;
+            background: var(--primary-color);
+        }
+        
+        .post-form textarea {
+            width: 100%;
+            height: 120px;
+            padding: 15px;
+            border: 1px solid var(--medium-gray);
+            border-radius: 8px;
+            resize: vertical;
+            font-family: inherit;
+            font-size: 16px;
+            margin-bottom: 15px;
+            transition: border-color 0.3s;
+        }
+        
+        .post-form textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 2px rgba(66, 133, 244, 0.2);
+        }
+        
+        .post-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .char-counter {
+            color: var(--dark-gray);
+            font-size: 14px;
+        }
+        
+        .btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 10px 25px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .btn:hover {
+            background-color: #3367d6;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .btn:disabled {
+            background-color: var(--medium-gray);
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .btn-secondary {
+            background-color: var(--secondary-color);
+        }
+        
+        .btn-secondary:hover {
+            background-color: #2d9147;
+        }
+        
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--primary-color);
+            color: var(--primary-color);
+        }
+        
+        .btn-outline:hover {
+            background-color: rgba(66, 133, 244, 0.1);
+        }
+        
+        /* Post List */
+        .post-list {
+            background: white;
+            border-radius: var(--card-radius);
+            box-shadow: var(--box-shadow);
+            overflow: hidden;
+        }
+        
+        .post-header {
+            padding: 15px 20px;
+            background: var(--light-gray);
+            border-bottom: 1px solid var(--medium-gray);
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .post {
+            padding: 20px;
+            border-bottom: 1px solid var(--medium-gray);
+            transition: background-color 0.3s;
+        }
+        
+        .post:hover {
+            background-color: rgba(245, 245, 245, 0.5);
+        }
+        
+        .post:last-child {
+            border-bottom: none;
+        }
+        
+        .post-content {
+            margin-bottom: 15px;
+            font-size: 16px;
+            line-height: 1.6;
+            white-space: pre-line;
+        }
+        
+        .post-meta {
+            display: flex;
+            justify-content: space-between;
+            color: var(--dark-gray);
+            font-size: 14px;
+            margin-bottom: 15px;
+        }
+        
+        .post-actions {
+            display: flex;
+            gap: 20px;
+        }
+        
+        .action-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: none;
+            border: none;
+            color: var(--dark-gray);
+            cursor: pointer;
+            transition: color 0.3s;
+            font-size: 15px;
+        }
+        
+        .action-btn:hover {
+            color: var(--primary-color);
+        }
+        
+        .action-btn.liked {
+            color: var(--accent-color);
+        }
+        
+        /* Comments */
+        .comments {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid var(--light-gray);
+        }
+        
+        .comment {
+            padding: 12px 0;
+            border-bottom: 1px solid var(--light-gray);
+        }
+        
+        .comment:last-child {
+            border-bottom: none;
+        }
+        
+        .comment-content {
+            font-size: 14px;
+            margin-bottom: 5px;
+            padding-left: 10px;
+            border-left: 2px solid var(--medium-gray);
+            padding-left: 15px;
+        }
+        
+        .comment-meta {
+            color: var(--dark-gray);
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 5px;
+        }
+        
+        .add-comment {
+            display: flex;
+            margin-top: 15px;
+        }
+        
+        .add-comment input {
+            flex-grow: 1;
+            padding: 12px 15px;
+            border: 1px solid var(--medium-gray);
+            border-radius: 8px 0 0 8px;
+            font-family: inherit;
+            transition: border-color 0.3s;
+        }
+        
+        .add-comment input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+        
+        .add-comment button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 0 8px 8px 0;
+            padding: 0 20px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .add-comment button:hover {
+            background-color: #3367d6;
+        }
+        
+        /* Sidebar */
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+        
+        .sidebar-card {
+            background: white;
+            border-radius: var(--card-radius);
+            box-shadow: var(--box-shadow);
+            padding: 20px;
+        }
+        
+        .sidebar-card h3 {
+            margin-bottom: 15px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--light-gray);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .stats-card {
+            background: linear-gradient(135deg, #f0f7ff, #e3eeff);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 15px;
+            border: 1px solid #dbe7ff;
+        }
+        
+        .stats-card p {
+            margin-bottom: 10px;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .stats-card .progress {
+            height: 8px;
+            background: #dbe7ff;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-top: 15px;
+        }
+        
+        .stats-card .progress-bar {
+            height: 100%;
+            background: var(--primary-color);
+            border-radius: 4px;
+        }
+        
+        .rules-list {
+            list-style: none;
+        }
+        
+        .rules-list li {
+            padding: 10px 0;
+            border-bottom: 1px solid var(--light-gray);
+            font-size: 14px;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+        }
+        
+        .rules-list li:last-child {
+            border-bottom: none;
+        }
+        
+        .rules-list li i {
+            color: var(--primary-color);
+            margin-top: 4px;
+        }
+        
+        .info-box {
+            background: #fff8e6;
+            border-radius: 8px;
+            padding: 15px;
+            border: 1px solid #ffeeba;
+            margin-top: 15px;
+        }
+        
+        /* Footer */
+        footer {
+            background-color: white;
+            padding: 30px 0;
+            margin-top: 50px;
+            border-top: 1px solid var(--medium-gray);
+        }
+        
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .copyright {
+            color: var(--dark-gray);
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .footer-links {
+            display: flex;
+            gap: 20px;
+        }
+        
+        .footer-links a {
+            color: var(--dark-gray);
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .footer-links a:hover {
+            color: var(--primary-color);
+        }
+        
+        /* Responsive */
+        @media (max-width: 900px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .sidebar {
+                order: -1;
+            }
+        }
+        
+        @media (max-width: 600px) {
+            .header-content {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            nav ul {
+                gap: 15px;
+            }
+            
+            nav ul li {
+                margin-left: 0;
+            }
+            
+            .footer-content {
+                flex-direction: column;
+                gap: 20px;
+                text-align: center;
+            }
+            
+            .footer-links {
+                justify-content: center;
+            }
+        }
+        
+        /* Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .modal {
+            background: white;
+            border-radius: var(--card-radius);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            width: 90%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+            transform: translateY(30px);
+            transition: transform 0.4s ease;
+        }
+        
+        .modal-overlay.active .modal {
+            transform: translateY(0);
+        }
+        
+        .modal-header {
+            padding: 20px;
+            background: var(--light-gray);
+            border-bottom: 1px solid var(--medium-gray);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+        
+        .modal-header h2 {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--dark-gray);
+            transition: color 0.3s;
+        }
+        
+        .close-btn:hover {
+            color: var(--accent-color);
+        }
+        
+        .modal-body {
+            padding: 25px;
+        }
+        
+        .modal-body p {
+            margin-bottom: 15px;
+            line-height: 1.7;
+        }
+        
+        .modal-body ul {
+            padding-left: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .modal-body li {
+            margin-bottom: 10px;
+        }
+        
+        /* Animation */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.5s ease forwards;
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <!-- Header -->
+        <header>
+            <div class="container">
+                <div class="header-content">
+                    <a href="#" class="logo">
+                        <div class="logo-icon">
+                            <i class="fas fa-feather-alt"></i>
+                        </div>
+                        <span>Анонимные мысли</span>
+                    </a>
+                    <nav>
+                        <ul>
+                            <li><a href="#"><i class="fas fa-home"></i> Главная</a></li>
+                            <li><a href="#"><i class="fas fa-fire"></i> Популярное</a></li>
+                            <li><a href="#" @click.prevent="showAboutModal"><i class="fas fa-info-circle"></i> О проекте</a></li>
+                            <li><a href="#" @click.prevent="showRulesModal"><i class="fas fa-book"></i> Правила</a></li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </header>
+        
+        <div class="container">
+            <div class="main-content">
+                <!-- Main Content -->
+                <div class="content">
+                    <!-- Post Form -->
+                    <div class="post-form fade-in">
+                        <textarea v-model="newPost" placeholder="Поделитесь своими мыслями анонимно..." maxlength="1000"></textarea>
+                        <div class="post-actions">
+                            <div class="char-counter">
+                                <i class="fas fa-text-height"></i> {{ newPost.length }}/1000
+                            </div>
+                            <button class="btn" @click="createPost" :disabled="!canPost">
+                                <i class="fas fa-paper-plane"></i> Опубликовать
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Post List -->
+                    <div class="post-list fade-in">
+                        <div class="post-header">
+                            <i class="fas fa-stream"></i> Последние сообщения
+                        </div>
+                        <div v-for="(post, index) in posts" :key="post.id" class="post">
+                            <div class="post-content">{{ post.content }}</div>
+                            <div class="post-meta">
+                                <div><i class="fas fa-user-secret"></i> Анонимный пользователь • {{ formatDate(post.timestamp) }}</div>
+                                <div><i class="fas fa-fingerprint"></i> ID: {{ post.id }}</div>
+                            </div>
+                            <div class="post-actions">
+                                <button class="action-btn" :class="{ 'liked': post.liked }" @click="toggleLike(post)">
+                                    <i class="fas fa-heart"></i> 
+                                    <span>{{ post.likes }}</span>
+                                </button>
+                                <button class="action-btn" @click="toggleComments(post)">
+                                    <i class="fas fa-comment"></i> 
+                                    <span>{{ post.comments.length }}</span>
+                                </button>
+                                <button class="action-btn">
+                                    <i class="fas fa-share-alt"></i> 
+                                    <span>Поделиться</span>
+                                </button>
+                            </div>
+                            
+                            <!-- Comments Section -->
+                            <div class="comments" v-if="post.showComments">
+                                <div v-for="comment in post.comments" :key="comment.id" class="comment">
+                                    <div class="comment-content">{{ comment.content }}</div>
+                                    <div class="comment-meta">
+                                        <i class="fas fa-user-secret"></i> Аноним • {{ formatDate(comment.timestamp) }}
+                                    </div>
+                                </div>
+                                <div class="add-comment">
+                                    <input type="text" v-model="post.newComment" placeholder="Добавить комментарий..." @keyup.enter="addComment(post)">
+                                    <button @click="addComment(post)">
+                                        <i class="fas fa-paper-plane"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Sidebar -->
+                <div class="sidebar">
+                    <div class="sidebar-card">
+                        <h3><i class="fas fa-chart-line"></i> Статистика</h3>
+                        <div class="stats-card">
+                            <p><i class="fas fa-comment"></i> Всего сообщений: {{ stats.totalPosts }}</p>
+                            <p><i class="fas fa-comments"></i> Всего комментариев: {{ stats.totalComments }}</p>
+                            <p><i class="fas fa-heart"></i> Всего лайков: {{ stats.totalLikes }}</p>
+                            <p><i class="fas fa-tachometer-alt"></i> Ваш лимит: {{ stats.dailyLimit - stats.userCharsUsed }}/{{ stats.dailyLimit }} симв.</p>
+                            <div class="progress">
+                                <div class="progress-bar" :style="{ width: (stats.userCharsUsed / stats.dailyLimit * 100) + '%' }"></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="sidebar-card">
+                        <h3><i class="fas fa-book"></i> Правила сообщества</h3>
+                        <ul class="rules-list">
+                            <li>
+                                <i class="fas fa-user-secret"></i>
+                                <span>Сообщения публикуются анонимно</span>
+                            </li>
+                            <li>
+                                <i class="fas fa-ban"></i>
+                                <span>Запрещены оскорбления и разжигание ненависти</span>
+                            </li>
+                            <li>
+                                <i class="fas fa-ruler"></i>
+                                <span>Максимальная длина сообщения - 1000 символов</span>
+                            </li>
+                            <li>
+                                <i class="fas fa-clock"></i>
+                                <span>Лимит: 1000 символов в сутки на пользователя</span>
+                            </li>
+                            <li>
+                                <i class="fas fa-robot"></i>
+                                <span>Сообщения проходят автоматическую модерацию</span>
+                            </li>
+                        </ul>
+                        
+                        <button class="btn btn-outline" style="margin-top: 15px; width: 100%;" @click="showRulesModal">
+                            <i class="fas fa-book-open"></i> Все правила
+                        </button>
+                    </div>
+                    
+                    <div class="sidebar-card">
+                        <h3><i class="fas fa-lightbulb"></i> Советы</h3>
+                        <div class="info-box">
+                            <p><i class="fas fa-info-circle"></i> Вы можете комментировать любые сообщения, даже старые.</p>
+                            <p><i class="fas fa-info-circle"></i> Ваши комментарии также публикуются анонимно.</p>
+                        </div>
+                        <button class="btn btn-outline" style="margin-top: 15px; width: 100%;" @click="showAboutModal">
+                            <i class="fas fa-info-circle"></i> О проекте
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Footer -->
+        <footer>
+            <div class="container">
+                <div class="footer-content">
+                    <div class="copyright">
+                        <i class="far fa-copyright"></i>
+                        2023 Анонимные мысли. Все права защищены.
+                    </div>
+                    <div class="footer-links">
+                        <a href="#" @click.prevent="showAboutModal">
+                            <i class="fas fa-info-circle"></i> О проекте
+                        </a>
+                        <a href="#" @click.prevent="showRulesModal">
+                            <i class="fas fa-book"></i> Правила
+                        </a>
+                        <a href="#">
+                            <i class="fas fa-headset"></i> Поддержка
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </footer>
+        
+        <!-- Rules Modal -->
+        <div class="modal-overlay" :class="{ 'active': showRules }" @click.self="showRules = false">
+            <div class="modal">
+                <div class="modal-header">
+                    <h2><i class="fas fa-book"></i> Правила сообщества</h2>
+                    <button class="close-btn" @click="showRules = false">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <p>Добро пожаловать в наше сообщество! Чтобы обеспечить безопасную и комфортную среду для всех пользователей, мы просим вас соблюдать следующие правила:</p>
+                    
+                    <h3>Основные правила</h3>
+                    <ul>
+                        <li>Все публикации и комментарии являются анонимными</li>
+                        <li>Запрещены любые формы дискриминации, ненависти или оскорблений</li>
+                        <li>Не публикуйте конфиденциальную информацию о себе или других</li>
+                        <li>Запрещены угрозы, запугивание или преследование</li>
+                        <li>Уважайте мнения других участников сообщества</li>
+                    </ul>
+                    
+                    <h3>Ограничения</h3>
+                    <ul>
+                        <li>Максимальная длина сообщения: 1000 символов</li>
+                        <li>Лимит на пользователя: 1000 символов в сутки</li>
+                        <li>Не более 1 сообщения в минуту</li>
+                        <li>Комментарии ограничены 300 символами</li>
+                    </ul>
+                    
+                    <h3>Модерация</h3>
+                    <p>Все сообщения проходят автоматическую модерацию. Сообщения, нарушающие правила, будут удалены автоматически. В случае систематических нарушений пользователь может быть заблокирован.</p>
+                    
+                    <p>Администрация оставляет за собой право изменять правила без предварительного уведомления.</p>
+                    
+                    <button class="btn" style="margin-top: 20px; width: 100%;" @click="showRules = false">
+                        <i class="fas fa-check"></i> Понятно
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- About Modal -->
+        <div class="modal-overlay" :class="{ 'active': showAbout }" @click.self="showAbout = false">
+            <div class="modal">
+                <div class="modal-header">
+                    <h2><i class="fas fa-info-circle"></i> О проекте</h2>
+                    <button class="close-btn" @click="showAbout = false">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <h3>Что такое "Анонимные мысли"?</h3>
+                    <p>Это платформа для свободного выражения мыслей и идей без раскрытия личности. Мы создали это пространство для тех, кто хочет делиться своими размышлениями, идеями и переживаниями без страха осуждения или идентификации.</p>
+                    
+                    <h3>Наша миссия</h3>
+                    <p>Мы верим, что анонимность способствует более честному и открытому общению. Наша цель - создать безопасное пространство, где люди могут:</p>
+                    <ul>
+                        <li>Делиться мыслями, которыми не могут поделиться где-либо ещё</li>
+                        <li>Обсуждать важные темы без страха осуждения</li>
+                        <li>Находить поддержку в сложных ситуациях</li>
+                        <li>Высказывать креативные идеи и получать обратную связь</li>
+                    </ul>
+                    
+                    <h3>Как это работает?</h3>
+                    <p>Все сообщения и комментарии публикуются полностью анонимно. Мы не собираем и не храним личные данные пользователей. Каждому пользователю присваивается случайный идентификатор, который не позволяет отследить его личность.</p>
+                    
+                    <h3>Безопасность</h3>
+                    <p>Мы используем современные технологии для защиты вашей анонимности и обеспечения безопасности платформы:</p>
+                    <ul>
+                        <li>Автоматическая фильтрация запрещённого контента</li>
+                        <li>Система ограничений для предотвращения спама</li>
+                        <li>Шифрование данных</li>
+                        <li>Регулярные проверки безопасности</li>
+                    </ul>
+                    
+                    <p>Присоединяйтесь к нашему сообществу и делитесь своими мыслями свободно!</p>
+                    
+                    <button class="btn" style="margin-top: 20px; width: 100%;" @click="showAbout = false">
+                        <i class="fas fa-check"></i> Понятно
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        new Vue({
+            el: '#app',
+            data: {
+                newPost: '',
+                posts: [],
+                stats: {
+                    totalPosts: 0,
+                    totalComments: 0,
+                    totalLikes: 0,
+                    dailyLimit: 1000,
+                    userCharsUsed: 0
+                },
+                showRules: false,
+                showAbout: false,
+                lastPostTime: null
+            },
+            computed: {
+                canPost() {
+                    return this.newPost.trim().length > 0 && 
+                           this.stats.userCharsUsed + this.newPost.length <= this.stats.dailyLimit;
+                }
+            },
+            created() {
+                this.loadData();
+                this.updateDailyStats();
+            },
+            methods: {
+                loadData() {
+                    // Загрузка данных из localStorage
+                    const savedData = localStorage.getItem('anonSocialData');
+                    if (savedData) {
+                        const data = JSON.parse(savedData);
+                        this.posts = data.posts || [];
+                        this.stats = data.stats || this.stats;
+                        this.lastPostTime = data.lastPostTime || null;
+                    }
+                    
+                    // Инициализация статистики
+                    this.calculateStats();
+                },
+                saveData() {
+                    // Сохранение данных в localStorage
+                    const data = {
+                        posts: this.posts,
+                        stats: this.stats,
+                        lastPostTime: this.lastPostTime
+                    };
+                    localStorage.setItem('anonSocialData', JSON.stringify(data));
+                },
+                updateDailyStats() {
+                    // Проверка, нужно ли сбросить дневной лимит
+                    const now = new Date();
+                    const lastReset = localStorage.getItem('dailyResetTime');
+                    
+                    if (!lastReset || new Date(lastReset).getDate() !== now.getDate()) {
+                        this.stats.userCharsUsed = 0;
+                        localStorage.setItem('dailyResetTime', now.toISOString());
+                        this.saveData();
+                    }
+                },
+                calculateStats() {
+                    // Пересчёт статистики
+                    this.stats.totalPosts = this.posts.length;
+                    this.stats.totalComments = this.posts.reduce((sum, post) => sum + post.comments.length, 0);
+                    this.stats.totalLikes = this.posts.reduce((sum, post) => sum + post.likes, 0);
+                },
+                createPost() {
+                    if (!this.canPost) {
+                        alert('Превышен дневной лимит символов!');
+                        return;
+                    }
+                    
+                    // Проверка на спам
+                    const now = Date.now();
+                    if (this.lastPostTime && now - this.lastPostTime < 5000) {
+                        alert('Вы публикуете слишком часто! Подождите немного.');
+                        return;
+                    }
+                    
+                    // Фильтрация контента
+                    const filteredContent = this.filterContent(this.newPost);
+                    
+                    // Создание нового поста
+                    const newPost = {
+                        id: this.generateId(),
+                        content: filteredContent,
+                        timestamp: now,
+                        likes: 0,
+                        liked: false,
+                        comments: [],
+                        showComments: false,
+                        newComment: ''
+                    };
+                    
+                    // Добавление поста в начало списка
+                    this.posts.unshift(newPost);
+                    
+                    // Обновление статистики
+                    this.stats.userCharsUsed += this.newPost.length;
+                    this.calculateStats();
+                    this.lastPostTime = now;
+                    
+                    // Сброс формы
+                    this.newPost = '';
+                    
+                    // Сохранение данных
+                    this.saveData();
+                },
+                toggleLike(post) {
+                    if (post.liked) {
+                        post.likes--;
+                    } else {
+                        post.likes++;
+                    }
+                    post.liked = !post.liked;
+                    this.calculateStats();
+                    this.saveData();
+                },
+                toggleComments(post) {
+                    post.showComments = !post.showComments;
+                },
+                addComment(post) {
+                    if (!post.newComment.trim()) return;
+                    
+                    // Фильтрация контента
+                    const filteredContent = this.filterContent(post.newComment);
+                    
+                    // Создание нового комментария
+                    const newComment = {
+                        id: this.generateId(),
+                        content: filteredContent,
+                        timestamp: Date.now()
+                    };
+                    
+                    // Добавление комментария
+                    post.comments.push(newComment);
+                    post.newComment = '';
+                    this.calculateStats();
+                    this.saveData();
+                },
+                filterContent(text) {
+                    // Простая фильтрация запрещённых слов
+                    const forbiddenWords = ['спам', 'реклама', 'ругательство', 'оскорбление'];
+                    let filteredText = text;
+                    
+                    forbiddenWords.forEach(word => {
+                        const regex = new RegExp(word, 'gi');
+                        filteredText = filteredText.replace(regex, '***');
+                    });
+                    
+                    return filteredText;
+                },
+                generateId() {
+                    // Генерация случайного ID
+                    return Math.random().toString(36).substr(2, 9);
+                },
+                formatDate(timestamp) {
+                    // Форматирование даты
+                    const date = new Date(timestamp);
+                    return date.toLocaleString('ru-RU', {
+                        day: '2-digit',
+                        month: '2-digit',
+                        year: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit'
+                    });
+                },
+                showRulesModal() {
+                    this.showRules = true;
+                },
+                showAboutModal() {
+                    this.showAbout = true;
+                }
+            }
+        });
+    </script>
+</body>
+</html>
